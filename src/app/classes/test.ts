@@ -3,9 +3,8 @@ import {FormBuilder, FormGroup, FormArray, FormControl, Validators, ValidationEr
 import { ParentFormGroup} from './parent.form-group';
 
 
-export class Test extends ParentFormGroup {
+export class Test {
 
   constructor() {
-    super(, , );}
-
+  }
 }

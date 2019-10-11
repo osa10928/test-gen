@@ -1,0 +1,27 @@
+<section *ngIf="data">
+  <header>
+    <h2>{{ data.name }} Test</h2>
+    <p *ngIf="data.passingGrade"> Passing Grade: <span>{{ data.passingGrade }}</span></p>
+  </header>
+  <form>
+    <div *ngFor="let question of data.multipleChoiceQuestions">
+      <mat-label>{{ question.question }}</mat-label>
+      <mat-radio-group class="radio-group">
+        <mat-radio-button *ngFor="let answer of question.answers" class="radio-btn">
+          {{ answer.answer }} <span *ngIf="answer.isCorrect"><-- Is Correct</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="free-response" *ngFor="let question of data.freeResponseQuestions">
+      <label>{{question.question}}</label>
+      <textarea class="text-area" matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="5"
+                cdkAutosizeMaxRows="10"
+                autofilled="false"
+                autocomplete="off"></textarea>
+    </div>
+  </form>
+  <button type="button" class="preview"
+          mat-raised-button color="warn" (click)="onNoClick()">Preview Test</button>
+</section>

@@ -1,0 +1,138 @@
+<form [formGroup]="testForm" (ngSubmit)="onSubmit()" autofilled="false"
+      autocomplete="off">
+  <mat-toolbar>
+    <nav>
+      <div type="button" (click)="addMultipleChoiceQuestion()" class="icon selected">
+        <i class="fas fa-question"></i>
+        <span class="icon-label">Add Question</span>
+      </div>
+    </nav>
+  </mat-toolbar>
+  <div class="d-flex flex-column">
+    <mat-form-field appearance="standard" class="w-75">
+      <mat-label>Name of Test</mat-label>
+      <input matInput type="text" formControlName="name" autofilled="false"
+             autocomplete="off" required>
+      <mat-error *ngIf="testForm.get('name').hasError('required')">
+        Required
+      </mat-error>
+    </mat-form-field>
+    <mat-checkbox formControlName="includePassingGrade">Include Passing Grade?</mat-checkbox>
+    <mat-form-field *ngIf="testForm.get('includePassingGrade').value" appearance="standard" class="w-25">
+      <mat-label>Passing Grade</mat-label>
+      <input matInput type="number" formControlName="passingGrade" max="100" min="0" autofilled="false"
+             autocomplete="off"/>
+      <mat-error *ngIf="testForm.get('passingGrade').hasError('includeGrade')">
+        Required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <section class="w-50" *ngIf="testForm.get('multipleChoiceQuestions').value.length">
+    <div formArrayName="multipleChoiceQuestions"
+         *ngFor="let question of testForm.get('multipleChoiceQuestions').controls; let i = index">
+      <div class="container questions" [formGroupName]="i">
+        <mat-form-field appearance="standard" class="w-50">
+          <mat-label>Question Number</mat-label>
+          <input matInput type="number" formControlName="id" value="{{i + 1}}" autofilled="false"
+                 autocomplete="off" readonly/>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Enter Question Here</mat-label>
+          <textarea formControlName="question" matInput cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    autofilled="false"
+                    autocomplete="off"></textarea>
+          <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].hasError('required')">
+            Required
+          </mat-error>
+        </mat-form-field>
+
+        <section>
+          <header>
+            <h4 class="answer-header">Answers</h4>
+            <mat-error *ngIf="question.get('answers').hasError('required')">
+              Required
+            </mat-error>
+            <mat-error *ngIf="question.get('answers').hasError('none')
+               && !(question.get('answers').hasError('required'))">
+              A correct answer is required
+            </mat-error>
+            <mat-error *ngIf="question.get('answers').hasError('multiple')
+               && !(question.get('answers').hasError('required'))">
+              There may only be 1 correct answer
+            </mat-error>
+          </header>
+          <mat-grid-list cols="1" rowHeight="2:1" gutterSize="5" formGroupName="answers">
+            <mat-grid-tile class="answers"
+                 *ngFor="let answer of question.get('answers').controls; let j = index;">
+              <div class="text-center" [formGroupName]="j">
+                <mat-form-field appearance="standard" class="w-50">
+                  <mat-label>Answer Number</mat-label>
+                  <input matInput type="number" formControlName="id" value="{{j + 1}}" autofilled="false"
+                         autocomplete="off" readonly/>
+                </mat-form-field>
+                <mat-checkbox formControlName="isCorrect">Correct Answer?</mat-checkbox>
+                <mat-form-field class="w-75" appearance="standard">
+                  <mat-label>Answer Text</mat-label>
+                  <textarea formControlName="answer" col="10" matInput cdkTextareaAutosize
+                            #autosize="cdkTextareaAutosize"
+                            cdkAutosizeMinRows="1"
+                            cdkAutosizeMaxRows="5"
+                            autofilled="false"
+                            autocomplete="off"></textarea>
+                  <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].get('answers').controls[j].get('answer').hasError('required')">
+                    Required
+                  </mat-error>
+                </mat-form-field>
+                <button (click)="deleteAnswer(i, j)" type="button" mat-raised-button color="warn">Delete Answer</button>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+          <div class="btn-group">
+            <button (click)="addAnswer(i)" type="button" mat-raised-button>New Answer</button>
+          </div>
+        </section>
+      </div>
+      <button (click)="deleteMultipleChoiceQuestion(i)" type="button" mat-raised-button color="warn">Delete Question</button>
+    </div>
+  </section>
+
+  <section *ngIf="testForm.get('freeResponseQuestions').value.length">
+    <div formArrayName="freeResponseQuestions"
+         *ngFor="let question of testForm.get('freeResponseQuestions').controls; let i = index">
+      <div class="container questions" [formGroupName]="i">
+        <mat-form-field appearance="standard" class="w-50">
+          <mat-label>Question Number</mat-label>
+          <input matInput type="number" formControlName="id" value="{{i + 1}}" autofilled="false"
+                 autocomplete="off" readonly/>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Enter Question Here</mat-label>
+          <textarea formControlName="question" matInput cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    autofilled="false"
+                    autocomplete="off"></textarea>
+          <mat-error *ngIf="testForm.get('freeResponseQuestions').controls[i].hasError('required')">
+            Required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </section>
+
+  <div class="btn-group">
+    <button type="button" class="preview"
+          [disabled]="testForm.invalid"
+          mat-raised-button color="accent" (click)="openDialog()">Preview Test</button>
+    <button type="submit"
+          [disabled]="testForm.invalid"
+          mat-raised-button color="primary">Save Test</button>
+  </div>
+</form>
+
+

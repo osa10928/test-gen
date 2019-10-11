@@ -1,0 +1,92 @@
+<h2>Generate Exam</h2>
+<h3>Course Name</h3>
+<form class="container" [formGroup]="testForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="standard">
+    <mat-label>Name of Test</mat-label>
+    <input matInput type="text" formControlName="name">
+    <mat-error *ngIf="testForm.get('name').hasError('required')">
+      Required
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="standard" class="w-50">
+    <mat-label>Passing Grade</mat-label>
+    <input matInput type="number" formControlName="passingGrade" max="100" min="0"/>
+    <mat-error *ngIf="testForm.get('passingGrade').hasError('required')">
+      Required
+    </mat-error>
+  </mat-form-field>
+  <mat-checkbox formControlName="isPublished">Published</mat-checkbox>
+
+  <section>
+    <header>
+      <h4 class="question-header">Questions</h4>
+      <mat-error *ngIf="testForm.get('questions').hasError('required')">
+        Required
+      </mat-error>
+    </header>
+    <div class="container questions" formArrayName="questions"
+         *ngFor="let question of testForm.get('questions').controls; let i = index;">
+      <div class="d-flex flex-column" [formGroupName]="i">
+        <mat-form-field appearance="standard" class="w-50">
+          <mat-label>Question Number</mat-label>
+          <input matInput type="number" formControlName="id" value="{{i + 1}}" readonly/>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Question Text</mat-label>
+          <textarea formControlName="question" matInput cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"></textarea>
+          <mat-error *ngIf="testForm.get('questions').controls[i].get('question').hasError('required')">
+            Required
+          </mat-error>
+        </mat-form-field>
+
+        <section>
+          <header>
+            <h4 class="answer-header">Answers</h4>
+            <mat-error *ngIf="testForm.get('questions').controls[i].get('answers').hasError('required')">
+              Required
+            </mat-error>
+            <mat-error *ngIf="testForm.get('questions').controls[i].get('answers').hasError('none')
+             && !(testForm.get('questions').controls[i].get('answers').hasError('required'))">
+              A correct answer is required
+            </mat-error>
+            <mat-error *ngIf="testForm.get('questions').controls[i].get('answers').hasError('multiple')
+             && !(testForm.get('questions').controls[i].get('answers').hasError('required'))">
+              There may only be 1 correct answer
+            </mat-error>
+          </header>
+          <div class="answers container" formArrayName="answers"
+               *ngFor="let answer of testForm.get('questions').controls[i].get('answers').controls; let j = index;">
+            <div class="d-flex flex-column" [formGroupName]="j">
+              <mat-form-field appearance="standard" class="w-50">
+                <mat-label>Answer Number</mat-label>
+                <input matInput type="number" formControlName="id" value="{{j + 1}}" readonly/>
+              </mat-form-field>
+              <mat-form-field appeance="standard">
+                <mat-label>Answer Text</mat-label>
+                <textarea formControlName="answer" matInput cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"></textarea>
+                <mat-error *ngIf="testForm.get('questions').controls[i].get('answers').controls[j].get('answer').hasError('required')">
+                  Required
+                </mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="isCorrect">Correct Answer?</mat-checkbox>
+            </div>
+          </div>
+        </section>
+        <button (click)="addAnswer(i)" type="button" mat-raised-button>New Answer</button>
+        <button (click)="deleteAnswer(i)" type="button" mat-raised-button color="warn">Delete Answer</button>
+        <button (click)="deleteQuestion(i)" type="button" mat-raised-button color="warn">Delete Question</button>
+      </div>
+    </div>
+    <button (click)="addQuestion()" mat-raised-button>New Question</button>
+  </section>
+
+  <button  type="submit" mat-raised-button color="primary">Save Test</button>
+</form>
+
+
