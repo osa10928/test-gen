@@ -1,0 +1,13 @@
+<section>
+  <header>
+    <h4>Question Preview</h4>
+  </header>
+  <div>
+    <p>{{question.value.id}}. {{question.value.question}}</p>
+    <mat-list *ngIf="question.value.answers.length">
+      <mat-list-item class="answers-list-item" *ngFor="let answer of question.value.answers; let i = index">
+        <p>{{answer.id}}. {{answer.answer}}</p>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</section>
