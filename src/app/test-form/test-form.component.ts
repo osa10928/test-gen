@@ -30,6 +30,7 @@ export class TestFormComponent implements OnInit {
   answers: FormArray;
   @Output() previewTest = new EventEmitter<FormGroup>();
   selectedQuestion = 0;
+  errors = {};
 
   constructor(
     private fb: FormBuilder,
@@ -50,10 +51,10 @@ export class TestFormComponent implements OnInit {
       name: ['', Validators.required],
       passingGrade: ['', Validators.required],
       published: [''],
-      multipleChoiceQuestions: this.fb.array([]),
-      freeResponseQuestions: this.fb.array([]),
+      multipleChoiceQuestions: this.fb.array([], Validators.required)
     });
     this.testForm.setValidators(this.isOneChecked);
+    if (this.errors) {console.log("true")}
   }
 
   toggleQuestionUp(): void {
@@ -74,9 +75,11 @@ export class TestFormComponent implements OnInit {
   }
 
   private onSubmit() {
-    this.validate();
+    this.validate()
     if (this.testForm.valid) {
       this.previewTest.emit(this.testForm);
+    } else {
+      this.getErrors();
     }
   }
 
@@ -93,7 +96,7 @@ export class TestFormComponent implements OnInit {
     const questionForm = this.fb.group({
       id: [''],
       question: ['', Validators.required],
-      answers: this.fb.array([])
+      answers: this.fb.array([], Validators.required)
     });
     this.createQuestionId(questionForm)
     questionForm.setValidators(this.isOneChecked())
@@ -167,8 +170,8 @@ export class TestFormComponent implements OnInit {
         // tslint:disable-next-line:no-unused-expression
         this.isChecked(answer) ? count++ : null;
       }
-      if (count > 1) { group.get('answers').setErrors({multiple: true}); }
-      if (count < 1) { group.get('answers').setErrors({none: true}); }
+      if (count > 1) { group.get('answers').setErrors({required: true}); }
+      if (count < 1) { group.get('answers').setErrors({required: true}); }
       return;
     };
   }
@@ -180,6 +183,31 @@ export class TestFormComponent implements OnInit {
   private validate() {
     this.testForm.updateValueAndValidity();
     this.testForm.markAllAsTouched();
+  }
+
+  private getErrors(): void {
+    this.errors = this.cycleControlsForErrors(this.testForm, this.errors);
+    for (let questionControl of this.multipleQuestionGroup.controls) {
+      this.errors = this.cycleControlsForErrors(questionControl, this.errors);
+    }
+    console.log(this.errors);
+  }
+
+  private cycleControlsForErrors(form: FormGroup, errors: object): object {
+    Object.keys(form.controls).forEach(key => {
+      const error = form.get(key).errors;
+      if (error != null) { errors[key] = error; }
+      if (key === "answers") {
+        for (let answerControls of form.get(key).controls) {
+          errors = this.cycleControlsForErrors(answerControls, errors);
+        }
+      }
+    });
+    return errors;
+  }
+
+  private hasErrors(): boolean {
+    return Object.keys(this.errors).length > 0;
   }
 
 

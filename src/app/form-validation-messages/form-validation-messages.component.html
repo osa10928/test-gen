@@ -1,0 +1,9 @@
+<div class="validation-messages" *ngIf="errors !== null">
+  <ul>
+    <ng-container *ngFor="let field of getKeys(errors)">
+      <li *ngFor="let errorKey of getKeys(errors[field])">
+        {{getMessage(field, errors[field], errorKey)}}
+      </li>
+    </ng-container>
+  </ul>
+</div>

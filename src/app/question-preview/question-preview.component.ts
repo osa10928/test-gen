@@ -12,7 +12,6 @@ export class QuestionPreviewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.question);
   }
 
 }

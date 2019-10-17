@@ -1,0 +1,7 @@
+.validation-messages {
+  margin-top:10px;
+  padding: 10px;
+  border-radius: 0.25em;
+  color: #ff4433;
+  background-color: rgba(125, 60, 50, 0.5);
+}
