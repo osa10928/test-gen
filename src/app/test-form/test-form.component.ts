@@ -26,7 +26,6 @@ import {PreviewTestComponent} from '../preview-test/preview-test.component';
 })
 export class TestFormComponent implements OnInit {
   testForm: FormGroup;
-  questions: FormArray;
   answers: FormArray;
   @Output() previewTest = new EventEmitter<FormGroup>();
   selectedQuestion = 0;
@@ -187,18 +186,18 @@ export class TestFormComponent implements OnInit {
 
   private getErrors(): void {
     this.errors = this.cycleControlsForErrors(this.testForm, this.errors);
-    for (let questionControl of this.multipleQuestionGroup.controls) {
+    for (const questionControl of this.multipleQuestionGroup.controls) {
       this.errors = this.cycleControlsForErrors(questionControl, this.errors);
     }
     console.log(this.errors);
   }
 
-  private cycleControlsForErrors(form: FormGroup, errors: object): object {
+  private cycleControlsForErrors(form, errors: object): object {
     Object.keys(form.controls).forEach(key => {
       const error = form.get(key).errors;
       if (error != null) { errors[key] = error; }
-      if (key === "answers") {
-        for (let answerControls of form.get(key).controls) {
+      if (key === 'answers') {
+        for (const answerControls of form.get(key).controls) {
           errors = this.cycleControlsForErrors(answerControls, errors);
         }
       }
