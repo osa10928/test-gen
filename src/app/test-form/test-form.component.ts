@@ -1,7 +1,8 @@
 import {Component, OnInit, ChangeDetectorRef, Output, EventEmitter, Input} from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, FormControl, Validators, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { MyErrorStateMatcher } from '../my-error-state-matcher';
-import { Question } from '../classes/question';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+
 import {MatDialog} from '@angular/material';
 import {PreviewTestComponent} from '../preview-test/preview-test.component';
 
@@ -9,13 +10,26 @@ import {PreviewTestComponent} from '../preview-test/preview-test.component';
 @Component({
   selector: 'app-test-form',
   templateUrl: './test-form.component.html',
-  styleUrls: ['./test-form.component.css']
+  styleUrls: ['./test-form.component.css'],
+  animations: [
+    trigger('flyInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%)' }),
+        animate(500, style({ transform: 'translateX(0%'}))
+      ]),
+      transition(':leave', [
+        style({display: 'none'}),
+        animate(500, style({ transform: 'translateX(100%)'}))
+      ])
+    ])
+  ]
 })
 export class TestFormComponent implements OnInit {
   testForm: FormGroup;
   questions: FormArray;
   answers: FormArray;
   @Output() previewTest = new EventEmitter<FormGroup>();
+  selectedQuestion = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -34,17 +48,33 @@ export class TestFormComponent implements OnInit {
   ngOnInit() {
     this.testForm = this.fb.group({
       name: ['', Validators.required],
-      includePassingGrade: [''],
-      passingGrade: [''],
-      multipleChoiceQuestions: this.fb.array([this.createMultiQuestionGroup()]),
-      freeResponseQuestions: this.fb.array([])
+      passingGrade: ['', Validators.required],
+      published: [''],
+      multipleChoiceQuestions: this.fb.array([]),
+      freeResponseQuestions: this.fb.array([]),
     });
-    this.testForm.setValidators([this.validatePassingGrade(), this.validateAQuestionExist()]);
+    this.testForm.setValidators(this.isOneChecked);
+  }
+
+  toggleQuestionUp(): void {
+    this.multipleQuestionGroup.length === this.selectedQuestion ? this.selectedQuestion = 1 : this.selectedQuestion++;
+  }
+
+  toggleQuestionDown(): void {
+    this.selectedQuestion === 1 || this.selectedQuestion === 0 ?
+      this.selectedQuestion = this.multipleQuestionGroup.length : this.selectedQuestion--;
+  }
+
+  get questionsTotal() {
+    return this.multipleQuestionGroup.length;
+  }
+
+  isSelectedQuestion(i): boolean {
+    return i + 1 === this.selectedQuestion;
   }
 
   private onSubmit() {
     this.validate();
-    this.isOneChecked();
     if (this.testForm.valid) {
       this.previewTest.emit(this.testForm);
     }
@@ -52,43 +82,56 @@ export class TestFormComponent implements OnInit {
 
   private addMultipleChoiceQuestion() {
     this.multipleQuestionGroup.push(this.createMultiQuestionGroup());
+    this.selectedQuestion = this.multipleQuestionGroup.length;
   }
 
   private deleteMultipleChoiceQuestion(index): void {
     this.multipleQuestionGroup.removeAt(index);
   }
 
-  private addFreeResponseQuestion() {
-    this.freeResponseQuestionGroup.push(this.createFreeResponseGroup());
-  }
-
-  private createMultiQuestionGroup(): FormGroup {
+  private createMultiQuestionGroup(numberOfQuestions = 1): FormGroup {
     const questionForm = this.fb.group({
       id: [''],
       question: ['', Validators.required],
       answers: this.fb.array([])
     });
+    this.createQuestionId(questionForm)
     questionForm.setValidators(this.isOneChecked())
     return questionForm;
   }
 
-  private createFreeResponseGroup(): FormGroup {
-    return this.fb.group({
-      id: [''],
-      question: ['', Validators.required],
-    });
+  private createQuestionId(question: FormGroup): void {
+    if (!question.value.id) {
+      question.patchValue({
+        id: this.multipleQuestionGroup.length + 1
+      });
+    }
   }
 
-  private createAnswersGroup(): FormGroup {
-    return this.fb.group({
+  private addAnswer(questionIndex, numberOfQuestion = 1): void {
+    while (numberOfQuestion > 0) {
+      this.getAnswers(questionIndex).push(this.createAnswersGroup(questionIndex));
+      numberOfQuestion--;
+    }
+    console.log(this.multipleQuestionGroup)
+  }
+
+  private createAnswersGroup(questionIndex): FormGroup {
+    const answer = this.fb.group({
       id: [''],
       answer: ['', Validators.required],
       isCorrect: ['']
     });
+    this.createAnswerId(answer, questionIndex);
+    return answer;
   }
 
-  private addAnswer(i): void {
-    this.getAnswers(i).push(this.createAnswersGroup());
+  createAnswerId(answer, questionIndex) {
+    if (!answer.value.id) {
+      answer.patchValue({
+        id: this.getAnswers(questionIndex).length + 1
+      });
+    }
   }
 
   private deleteAnswer(questionIndex, answerIndex): void {
@@ -99,33 +142,14 @@ export class TestFormComponent implements OnInit {
     return this.testForm.get('multipleChoiceQuestions') as FormArray;
   }
 
-  private get freeResponseQuestionGroup(): FormArray {
-    return this.testForm.get('freeResponseQuestions') as FormArray;
-  }
-
-  private getQuestions(): FormArray {
-    return this.testForm.get('questions') as FormArray;
-  }
-
   private getAnswers(i): FormArray {
     const questions = this.multipleQuestionGroup;
     return questions.controls[i].get('answers') as FormArray;
   }
 
-  private validatePassingGrade(): ValidatorFn {
-    return (group: FormGroup): ValidationErrors => {
-      if (this.testForm.get('includePassingGrade').value && !this.testForm.get('passingGrade').value) {
-        this.testForm.get('passingGrade').setErrors({includeGrade: true});
-      } else {
-        this.testForm.get('passingGrade').setErrors(null);
-      }
-      return;
-    };
-  }
-
   private validateAQuestionExist(): ValidatorFn {
     return (group: FormGroup): ValidationErrors => {
-      if (this.multipleQuestionGroup.value.length || this.freeResponseQuestionGroup.value.length) {
+      if (this.multipleQuestionGroup.value.length) {
         this.multipleQuestionGroup.setErrors(null);
         return;
       }

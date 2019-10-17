@@ -41,6 +41,7 @@ import { TestBuilderComponent } from './test-builder/test-builder.component';
 import { DynamicTestComponent } from './dynamic-test/dynamic-test.component';
 import { PreviewTestComponent } from './preview-test/preview-test.component';
 import { TestTileComponent } from './test-tile/test-tile.component';
+import { QuestionPreviewComponent } from './question-preview/question-preview.component';
 
 export const materialModule = [
   MatAutocompleteModule,
@@ -78,7 +79,8 @@ export const materialModule = [
     TestBuilderComponent,
     DynamicTestComponent,
     PreviewTestComponent,
-    TestTileComponent
+    TestTileComponent,
+    QuestionPreviewComponent
   ],
   entryComponents: [
     PreviewTestComponent
