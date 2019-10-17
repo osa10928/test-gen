@@ -37,8 +37,6 @@ import {
   ShowOnDirtyErrorStateMatcher
 }                                         from "@angular/material";
 import { TestFormComponent } from './test-form/test-form.component';
-import { TestBuilderComponent } from './test-builder/test-builder.component';
-import { DynamicTestComponent } from './dynamic-test/dynamic-test.component';
 import { PreviewTestComponent } from './preview-test/preview-test.component';
 import { TestTileComponent } from './test-tile/test-tile.component';
 import { QuestionPreviewComponent } from './question-preview/question-preview.component';
@@ -77,8 +75,6 @@ export const materialModule = [
   declarations: [
     AppComponent,
     TestFormComponent,
-    TestBuilderComponent,
-    DynamicTestComponent,
     PreviewTestComponent,
     TestTileComponent,
     QuestionPreviewComponent,
