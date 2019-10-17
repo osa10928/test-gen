@@ -122,6 +122,7 @@
     </div>
   </section>
 
+  <app-form-validation-messages *ngIf="hasErrors()" [errors]="errors"></app-form-validation-messages>
   <div class="btn-group">
     <button type="button" class="preview"
           mat-raised-button color="accent" (click)="openDialog()">Preview Test</button>
