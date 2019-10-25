@@ -34,4 +34,5 @@ jobs:
           key: form-gen-{{ .Branch  }}-{{ checksum "package.json" }}
 
       # run tests!
-      - run: npm run e2e -- --no-progress --config=protractor-ci.conf.js
+      - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
