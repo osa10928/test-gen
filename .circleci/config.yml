@@ -34,4 +34,4 @@ jobs:
           key: form-gen-{{ .Branch  }}-{{ checksum "package.json" }}
 
       # run tests!
-      - run: npm run test
+      - run: npm run e2e -- --no-progress --config=protractor-ci.conf.js
