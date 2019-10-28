@@ -12,7 +12,7 @@ export class ValidationMessenger {
     multipleChoiceQuestions: 'A QUESTION',
     question: 'The QUESTION input',
     answer: 'An ANSWER',
-    answers: 'A CORRECT ANSWER'
+    answers: 'A Single CORRECT ANSWER'
   }
 
 

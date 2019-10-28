@@ -1,5 +1,5 @@
 import {Component, OnInit, ChangeDetectorRef, Output, EventEmitter, Input} from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, FormControl, Validators, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, FormControl, Validators, ValidationErrors, ValidatorFn, AbstractControl} from '@angular/forms';
 import { MyErrorStateMatcher } from '../my-error-state-matcher';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -38,13 +38,6 @@ export class TestFormComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(PreviewTestComponent, {
-      width: '400px',
-      data: this.testForm.value
-    });
-  }
-
   ngOnInit() {
     this.testForm = this.fb.group({
       name: ['', Validators.required],
@@ -53,7 +46,14 @@ export class TestFormComponent implements OnInit {
       multipleChoiceQuestions: this.fb.array([], Validators.required)
     });
     this.testForm.setValidators(this.isOneChecked);
-    if (this.errors) {console.log("true")}
+    //console.log(this.testForm);
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(PreviewTestComponent, {
+      width: '400px',
+      data: this.testForm.value
+    });
   }
 
   toggleQuestionUp(): void {
@@ -65,10 +65,6 @@ export class TestFormComponent implements OnInit {
       this.selectedQuestion = this.multipleQuestionGroup.length : this.selectedQuestion--;
   }
 
-  get questionsTotal() {
-    return this.multipleQuestionGroup.length;
-  }
-
   isSelectedQuestion(i): boolean {
     return i + 1 === this.selectedQuestion;
   }
@@ -76,7 +72,8 @@ export class TestFormComponent implements OnInit {
   private onSubmit() {
     this.validate()
     if (this.testForm.valid) {
-      this.previewTest.emit(this.testForm);
+      console.log(this.testForm)
+      //this.previewTest.emit(this.testForm);
     } else {
       this.getErrors();
     }
@@ -85,10 +82,13 @@ export class TestFormComponent implements OnInit {
   private addMultipleChoiceQuestion() {
     this.multipleQuestionGroup.push(this.createMultiQuestionGroup());
     this.selectedQuestion = this.multipleQuestionGroup.length;
+    //console.log(this.multipleQuestionGroup)
   }
 
   private deleteMultipleChoiceQuestion(index): void {
+    this.reorderId(index, this.multipleQuestionGroup);
     this.multipleQuestionGroup.removeAt(index);
+    if (this.selectedQuestion > 1) { this.selectedQuestion--; }
   }
 
   private createMultiQuestionGroup(numberOfQuestions = 1): FormGroup {
@@ -97,8 +97,9 @@ export class TestFormComponent implements OnInit {
       question: ['', Validators.required],
       answers: this.fb.array([], Validators.required)
     });
+
     this.createQuestionId(questionForm)
-    questionForm.setValidators(this.isOneChecked())
+    questionForm.setValidators(this.isOneChecked());
     return questionForm;
   }
 
@@ -110,12 +111,17 @@ export class TestFormComponent implements OnInit {
     }
   }
 
+  private reorderId(index, formArray: FormArray): void {
+    for (const question of formArray.controls) {
+      if (index < question.get('id').value) { question.get('id').patchValue(question.get('id').value - 1); }
+    }
+  }
+
   private addAnswer(questionIndex, numberOfQuestion = 1): void {
     while (numberOfQuestion > 0) {
       this.getAnswers(questionIndex).push(this.createAnswersGroup(questionIndex));
       numberOfQuestion--;
     }
-    console.log(this.multipleQuestionGroup)
   }
 
   private createAnswersGroup(questionIndex): FormGroup {
@@ -137,6 +143,7 @@ export class TestFormComponent implements OnInit {
   }
 
   private deleteAnswer(questionIndex, answerIndex): void {
+    this.reorderId(answerIndex, this.getAnswers(questionIndex));
     this.getAnswers(questionIndex).removeAt(answerIndex);
   }
 
@@ -149,15 +156,8 @@ export class TestFormComponent implements OnInit {
     return questions.controls[i].get('answers') as FormArray;
   }
 
-  private validateAQuestionExist(): ValidatorFn {
-    return (group: FormGroup): ValidationErrors => {
-      if (this.multipleQuestionGroup.value.length) {
-        this.multipleQuestionGroup.setErrors(null);
-        return;
-      }
-      this.multipleQuestionGroup.setErrors({includeQuestion: true});
-      return;
-    };
+  private get questionsTotal() {
+    return this.multipleQuestionGroup.length;
   }
 
   private isOneChecked(): ValidatorFn {

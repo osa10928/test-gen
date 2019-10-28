@@ -25,7 +25,6 @@ export class FormValidationMessagesComponent implements OnInit {
   }
 
   getMessage(label, errors, key) {
-    console.log(errors, key, label)
     return this.messenger.getMessageForError(errors, key, label);
   }
 
