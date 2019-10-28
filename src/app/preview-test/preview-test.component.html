@@ -6,9 +6,10 @@
   <form>
     <div *ngFor="let question of data.multipleChoiceQuestions">
       <mat-label>{{ question.question }}</mat-label>
-      <mat-radio-group class="radio-group">
-        <mat-radio-button *ngFor="let answer of question.answers" class="radio-btn">
-          {{ answer.answer }} <span *ngIf="answer.isCorrect"><-- Is Correct</span>
+      <mat-radio-group class="radio-group" >
+        <mat-radio-button *ngFor="let answer of question.answers" class="radio-btn" [checked]="answer.isCorrect === true"
+                          [value]="answer.answer" name="answers-choices">
+          {{ answer.answer }} <span *ngIf="answer.isCorrect"><--Correct</span>
         </mat-radio-button>
       </mat-radio-group>
     </div>
@@ -23,5 +24,5 @@
     </div>
   </form>
   <button type="button" class="preview"
-          mat-raised-button color="warn" (click)="onNoClick()">Preview Test</button>
+          mat-raised-button color="warn" (click)="onNoClick()">Close Preview</button>
 </section>

@@ -82,7 +82,6 @@ export class TestFormComponent implements OnInit {
   private addMultipleChoiceQuestion() {
     this.multipleQuestionGroup.push(this.createMultiQuestionGroup());
     this.selectedQuestion = this.multipleQuestionGroup.length;
-    //console.log(this.multipleQuestionGroup)
   }
 
   private deleteMultipleChoiceQuestion(index): void {

@@ -288,7 +288,7 @@ describe('TestFormComponent', () => {
         expect(answers.controls[0].get('isCorrect')).toBeTruthy();
       });
 
-      fit('should remove single correct answer error on test form when 1 answer is selected as correct', () => {
+      it('should remove "single correct answer" error on test form when 1 answer is selected as correct', () => {
         const answer1 = answers.controls[0];
         const answer2 = answers.controls[1];
 

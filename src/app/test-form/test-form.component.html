@@ -27,7 +27,7 @@
     <mat-form-field appearance="standard" class="w-50">
       <mat-label>Name of Test</mat-label>
       <input matInput type="text" formControlName="name" autofilled="false"
-             autocomplete="off" required>
+             autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('name').hasError('required')">
         Required
       </mat-error>
@@ -35,7 +35,7 @@
     <mat-form-field appearance="standard" class="w-25">
       <mat-label>Passing Grade</mat-label>
       <input matInput type="number" formControlName="passingGrade" max="100" min="0" autofilled="false"
-             autocomplete="off"/>
+             autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('passingGrade').hasError('required')">
         Required
       </mat-error>
@@ -61,7 +61,8 @@
                         cdkAutosizeMinRows="1"
                         cdkAutosizeMaxRows="5"
                         autofilled="false"
-                        autocomplete="off"></textarea>
+                        autocomplete="off"
+                        required></textarea>
               <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].hasError('required')">
                 Required
               </mat-error>
@@ -84,7 +85,7 @@
               </header>
               <div formGroupName="answers"
                    *ngFor="let answer of question.get('answers').controls; let j = index;">
-                <div class="answer" [formGroupName]="j">
+                <div [@flyInOut] class="answer" [formGroupName]="j">
                   <mat-form-field appearance="standard" class="answer-number">
                     <mat-label>Answer #</mat-label>
                     <input matInput type="number" formControlName="id" value="{{j + 1}}" autofilled="false"
@@ -97,7 +98,8 @@
                               cdkAutosizeMinRows="1"
                               cdkAutosizeMaxRows="5"
                               autofilled="false"
-                              autocomplete="off"></textarea>
+                              autocomplete="off"
+                              required></textarea>
                     <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].get('answers').controls[j].get('answer').hasError('required')">
                       Required
                     </mat-error>
@@ -113,11 +115,14 @@
               </div>
             </section>
           </div>
+
           <app-question-preview class="container w-50"
                                 [question]="question"
           ></app-question-preview>
+
         </div>
-        <button (click)="deleteMultipleChoiceQuestion(i)" id="delete-question-btn-{{i}}" type="button" mat-raised-button color="warn">Delete Question</button>
+        <button (click)="deleteMultipleChoiceQuestion(i)" id="delete-question-btn-{{i}}" type="button"
+                mat-raised-button color="warn">Delete Question</button>
       </div>
     </div>
   </section>
