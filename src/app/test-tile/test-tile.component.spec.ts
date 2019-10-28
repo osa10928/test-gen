@@ -21,7 +21,8 @@ describe('TestTileComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should contain "Test Builder"', () => {
+    const title: HTMLElement = fixture.nativeElement;
+    expect(title.textContent).toContain('Test Builder');
   });
 });

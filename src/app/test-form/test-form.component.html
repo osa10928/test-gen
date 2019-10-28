@@ -2,7 +2,7 @@
       autocomplete="off">
   <mat-toolbar>
     <nav>
-      <div type="button" (click)="addMultipleChoiceQuestion()" class="icon selected">
+      <div type="button" (click)="addMultipleChoiceQuestion()" id="add-question-btn" class="icon selected">
         <i class="fas fa-question"></i>
         <span class="icon-label">Add Question</span>
       </div>
@@ -10,13 +10,13 @@
   </mat-toolbar>
 
   <mat-toolbar class="d-flex justify-content-center align-items-center clear">
-    <button (click)="toggleQuestionDown()" class="keyboard-arrow-btns d-flex justify-context-center" aria-label="question-back-button" type="button">
+    <button (click)="toggleQuestionDown()" id="keyboard-arrow-left" class="keyboard-arrow-btns d-flex justify-context-center" aria-label="question-back-button" type="button">
       <mat-icon class="keyboard-arrows-icon"
                 aria-hidden="false"
                 aria-label="question-back-button-icon">keyboard_arrow_left</mat-icon>
     </button>
-    <p class="question-toggle"><span>{{selectedQuestion}}</span>/<span>{{questionsTotal}}</span></p>
-    <button (click)="toggleQuestionUp()" class="keyboard-arrow-btns d-flex justify-context-center" aria-label="question-back-button" type="button">
+    <p class="question-toggle"><span id="selected-question">{{selectedQuestion}}</span>/<span id="total-questions">{{questionsTotal}}</span></p>
+    <button (click)="toggleQuestionUp()" id="keyboard-arrow-right" class="keyboard-arrow-btns d-flex justify-context-center" aria-label="question-back-button" type="button">
       <mat-icon class="keyboard-arrows-icon"
                 aria-hidden="false"
                 aria-label="question-back-button-icon">keyboard_arrow_right</mat-icon>
@@ -102,14 +102,14 @@
                       Required
                     </mat-error>
                   </mat-form-field>
-                  <mat-checkbox class="is-correct" formControlName="isCorrect">Correct Answer?</mat-checkbox>
-                  <button class="btn-delete" (click)="deleteAnswer(i, j)" type="button" mat-raised-button color="warn">
+                  <mat-checkbox id="is-correct-checkbox-{{i}}-{{j}}" class="is-correct" formControlName="isCorrect">Correct Answer?</mat-checkbox>
+                  <button id="delete-answer-btn-{{i}}-{{j}}" class="btn-delete" (click)="deleteAnswer(i, j)" type="button" mat-raised-button color="warn">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
               </div>
               <div class="btn-group">
-                <button (click)="addAnswer(i)" type="button" mat-raised-button>New Answer</button>
+                <button id="add-answer-btn-{{i}}" (click)="addAnswer(i)" type="button" mat-raised-button>New Answer</button>
               </div>
             </section>
           </div>
@@ -117,7 +117,7 @@
                                 [question]="question"
           ></app-question-preview>
         </div>
-        <button (click)="deleteMultipleChoiceQuestion(i)" type="button" mat-raised-button color="warn">Delete Question</button>
+        <button (click)="deleteMultipleChoiceQuestion(i)" id="delete-question-btn-{{i}}" type="button" mat-raised-button color="warn">Delete Question</button>
       </div>
     </div>
   </section>
@@ -126,7 +126,7 @@
   <div class="btn-group">
     <button type="button" class="preview"
           mat-raised-button color="accent" (click)="openDialog()">Preview Test</button>
-    <button type="submit"
+    <button id="submit-test-btn" type="submit"
           mat-raised-button color="primary">Save Test</button>
   </div>
 </form>
