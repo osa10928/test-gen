@@ -15,6 +15,7 @@ export class FormValidationMessagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.errors)
   }
 
   getKeys(object) {

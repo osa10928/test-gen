@@ -9,7 +9,7 @@
       <mat-radio-group class="radio-group" >
         <mat-radio-button *ngFor="let answer of question.answers" class="radio-btn" [checked]="answer.isCorrect === true"
                           [value]="answer.answer" name="answers-choices">
-          {{ answer.answer }} <span *ngIf="answer.isCorrect"><--Correct</span>
+          {{ answer.answer }} <span *ngIf="answer.isCorrect"><-- Correct</span>
         </mat-radio-button>
       </mat-radio-group>
     </div>

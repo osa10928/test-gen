@@ -3,9 +3,18 @@
   <mat-toolbar>
     <nav>
       <div type="button" (click)="addMultipleChoiceQuestion()" id="add-question-btn" class="icon selected">
-        <i class="fas fa-question"></i>
+        <i class="fas fa-plus"></i>
         <span class="icon-label">Add Question</span>
       </div>
+      <div type="button" (click)="openDialog()" id="preview-test-button" class="icon selected">
+        <i class="fas fa-search"></i>
+        <span class="icon-label">Preview Test</span>
+      </div>
+      <div type="button" id="save-test-button" class="icon selected" (click)="formSubmit.click()">
+        <i class="fas fa-save"></i>
+        <span class="icon-label">Save Test</span>
+      </div>
+      <button hidden #formSubmit type="submit"></button>
     </nav>
   </mat-toolbar>
 
@@ -71,16 +80,8 @@
             <section>
               <header>
                 <h4 class="answer-header">Answers</h4>
-                <mat-error *ngIf="question.get('answers').hasError('required')">
+                <mat-error *ngIf="question.get('answers').hasError('required') && !question.get('answers').pristine">
                   Required
-                </mat-error>
-                <mat-error *ngIf="question.get('answers').hasError('none')
-               && !(question.get('answers').hasError('required'))">
-                  A correct answer is required
-                </mat-error>
-                <mat-error *ngIf="question.get('answers').hasError('multiple')
-               && !(question.get('answers').hasError('required'))">
-                  There may only be 1 correct answer
                 </mat-error>
               </header>
               <div formGroupName="answers"
@@ -128,12 +129,6 @@
   </section>
 
   <app-form-validation-messages *ngIf="hasErrors()" [errors]="errors"></app-form-validation-messages>
-  <div class="btn-group">
-    <button type="button" class="preview"
-          mat-raised-button color="accent" (click)="openDialog()">Preview Test</button>
-    <button id="submit-test-btn" type="submit"
-          mat-raised-button color="primary">Save Test</button>
-  </div>
 </form>
 
 
