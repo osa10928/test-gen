@@ -3,9 +3,18 @@
   <mat-toolbar>
     <nav>
       <div type="button" (click)="addMultipleChoiceQuestion()" id="add-question-btn" class="icon selected">
-        <i class="fas fa-question"></i>
+        <i class="fas fa-plus"></i>
         <span class="icon-label">Add Question</span>
       </div>
+      <div type="button" (click)="openDialog()" id="preview-test-button" class="icon selected">
+        <i class="fas fa-search"></i>
+        <span class="icon-label">Preview Test</span>
+      </div>
+      <div type="button" id="save-test-button" class="icon selected" (click)="formSubmit.click()">
+        <i class="fas fa-save"></i>
+        <span class="icon-label">Save Test</span>
+      </div>
+      <button hidden #formSubmit type="submit"></button>
     </nav>
   </mat-toolbar>
 
@@ -27,7 +36,7 @@
     <mat-form-field appearance="standard" class="w-50">
       <mat-label>Name of Test</mat-label>
       <input matInput type="text" formControlName="name" autofilled="false"
-             autocomplete="off" required>
+             autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('name').hasError('required')">
         Required
       </mat-error>
@@ -35,7 +44,7 @@
     <mat-form-field appearance="standard" class="w-25">
       <mat-label>Passing Grade</mat-label>
       <input matInput type="number" formControlName="passingGrade" max="100" min="0" autofilled="false"
-             autocomplete="off"/>
+             autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('passingGrade').hasError('required')">
         Required
       </mat-error>
@@ -61,7 +70,8 @@
                         cdkAutosizeMinRows="1"
                         cdkAutosizeMaxRows="5"
                         autofilled="false"
-                        autocomplete="off"></textarea>
+                        autocomplete="off"
+                        required></textarea>
               <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].hasError('required')">
                 Required
               </mat-error>
@@ -70,21 +80,13 @@
             <section>
               <header>
                 <h4 class="answer-header">Answers</h4>
-                <mat-error *ngIf="question.get('answers').hasError('required')">
+                <mat-error *ngIf="question.get('answers').hasError('required') && !question.get('answers').pristine">
                   Required
-                </mat-error>
-                <mat-error *ngIf="question.get('answers').hasError('none')
-               && !(question.get('answers').hasError('required'))">
-                  A correct answer is required
-                </mat-error>
-                <mat-error *ngIf="question.get('answers').hasError('multiple')
-               && !(question.get('answers').hasError('required'))">
-                  There may only be 1 correct answer
                 </mat-error>
               </header>
               <div formGroupName="answers"
                    *ngFor="let answer of question.get('answers').controls; let j = index;">
-                <div class="answer" [formGroupName]="j">
+                <div [@flyInOut] class="answer" [formGroupName]="j">
                   <mat-form-field appearance="standard" class="answer-number">
                     <mat-label>Answer #</mat-label>
                     <input matInput type="number" formControlName="id" value="{{j + 1}}" autofilled="false"
@@ -97,7 +99,8 @@
                               cdkAutosizeMinRows="1"
                               cdkAutosizeMaxRows="5"
                               autofilled="false"
-                              autocomplete="off"></textarea>
+                              autocomplete="off"
+                              required></textarea>
                     <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].get('answers').controls[j].get('answer').hasError('required')">
                       Required
                     </mat-error>
@@ -113,22 +116,19 @@
               </div>
             </section>
           </div>
+
           <app-question-preview class="container w-50"
                                 [question]="question"
           ></app-question-preview>
+
         </div>
-        <button (click)="deleteMultipleChoiceQuestion(i)" id="delete-question-btn-{{i}}" type="button" mat-raised-button color="warn">Delete Question</button>
+        <button (click)="deleteMultipleChoiceQuestion(i)" id="delete-question-btn-{{i}}" type="button"
+                mat-raised-button color="warn">Delete Question</button>
       </div>
     </div>
   </section>
 
   <app-form-validation-messages *ngIf="hasErrors()" [errors]="errors"></app-form-validation-messages>
-  <div class="btn-group">
-    <button type="button" class="preview"
-          mat-raised-button color="accent" (click)="openDialog()">Preview Test</button>
-    <button id="submit-test-btn" type="submit"
-          mat-raised-button color="primary">Save Test</button>
-  </div>
 </form>
 
 

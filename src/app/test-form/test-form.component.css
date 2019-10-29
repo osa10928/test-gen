@@ -1,5 +1,6 @@
-.fa-question {
-
+nav {
+  display: flex;
+  flex-direction: row;
 }
 
 mat-toolbar {
@@ -37,7 +38,7 @@ mat-toolbar {
 
 .container {
   margin: 3% 0%;
-  border: lightslategrey solid;
+  border: lightslategrey solid 1px;
   padding: 2em;
   box-sizing: border-box;
   width: 100%;

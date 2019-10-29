@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
@@ -6,9 +6,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
   templateUrl: './preview-test.component.html',
   styleUrls: ['./preview-test.component.css']
 })
-export class PreviewTestComponent implements OnInit {
-
-  //@Input() test: object;
+export class PreviewTestComponent implements OnInit{
 
   constructor(
     public dialogRef: MatDialogRef<PreviewTestComponent>,

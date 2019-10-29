@@ -57,7 +57,11 @@ export class TestFormComponent implements OnInit {
   }
 
   toggleQuestionUp(): void {
-    this.multipleQuestionGroup.length === this.selectedQuestion ? this.selectedQuestion = 1 : this.selectedQuestion++;
+    if (this.selectedQuestion  >= this.multipleQuestionGroup.length) {
+      this.multipleQuestionGroup.length > 0 ? this.selectedQuestion = 1 : this.selectedQuestion = 0;
+    } else {
+      this.selectedQuestion++;
+    };
   }
 
   toggleQuestionDown(): void {
@@ -82,7 +86,7 @@ export class TestFormComponent implements OnInit {
   private addMultipleChoiceQuestion() {
     this.multipleQuestionGroup.push(this.createMultiQuestionGroup());
     this.selectedQuestion = this.multipleQuestionGroup.length;
-    //console.log(this.multipleQuestionGroup)
+    console.log(this.multipleQuestionGroup)
   }
 
   private deleteMultipleChoiceQuestion(index): void {
@@ -189,6 +193,7 @@ export class TestFormComponent implements OnInit {
     for (const questionControl of this.multipleQuestionGroup.controls) {
       this.errors = this.cycleControlsForErrors(questionControl, this.errors);
     }
+    console.log("hhhd")
     console.log(this.errors);
   }
 

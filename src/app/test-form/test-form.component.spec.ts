@@ -215,6 +215,30 @@ describe('TestFormComponent', () => {
 
     }));
 
+    it('selected question cannot be greater than total questions', () => {
+      toggleQuestionUpBtn.click();
+      fixture.detectChanges();
+
+      expect(parseInt(selectedQuestionSpan.textContent, 10)).toBeLessThanOrEqual(parseInt(totalQuestionsSpan.textContent, 10));
+    });
+
+    fit('selected question cannot be less than 0', () => {
+      toggleQuestionDownBtn.click();
+      fixture.detectChanges();
+
+      expect(parseInt(selectedQuestionSpan.textContent, 10)).toBeLessThanOrEqual(0);
+
+      addQuestionButton.click();
+      addQuestionButton.click();
+      fixture.detectChanges();
+
+      toggleQuestionDownBtn.click();
+      toggleQuestionDownBtn.click();
+      fixture.detectChanges()
+
+      expect(parseInt(selectedQuestionSpan.textContent, 10)).toBe(parseInt(totalQuestionsSpan.textContent, 10));
+    })
+
   });
 
   describe('answers', () => {
@@ -288,7 +312,7 @@ describe('TestFormComponent', () => {
         expect(answers.controls[0].get('isCorrect')).toBeTruthy();
       });
 
-      fit('should remove single correct answer error on test form when 1 answer is selected as correct', () => {
+      it('should remove "single correct answer" error on test form when 1 answer is selected as correct', () => {
         const answer1 = answers.controls[0];
         const answer2 = answers.controls[1];
 
