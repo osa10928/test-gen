@@ -52,7 +52,6 @@ describe('TestFormComponent', () => {
   describe('testForm', () => {
 
     it('should initialize with a testForm', () => {
-      expect(component.testForm).toBeTruthy();
       expect(testForm).toBeTruthy();
       expect(testForm.status).toBe('INVALID');
     });
@@ -222,7 +221,7 @@ describe('TestFormComponent', () => {
       expect(parseInt(selectedQuestionSpan.textContent, 10)).toBeLessThanOrEqual(parseInt(totalQuestionsSpan.textContent, 10));
     });
 
-    fit('selected question cannot be less than 0', () => {
+    it('selected question cannot be less than 0', () => {
       toggleQuestionDownBtn.click();
       fixture.detectChanges();
 
