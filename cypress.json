@@ -1,0 +1,20 @@
+{
+  "baseUrl": "http://localhost:4200",
+  "testName": "SampleTest",
+  "passingGrade": 65,
+  "question0": "What is 2 + 2?",
+  "answer0-0": "2",
+  "answer0-1": "4",
+  "answer0-2": "6",
+  "correct0": "0-1",
+  "question1": "How great is Stephen Agwu?",
+  "answer1-0": "He's ok",
+  "answer1-1": "He's great!",
+  "answer1-2": "He's the greatest in all existence",
+  "correct1": "1-2",
+  "question2": "True or false: the sun rises in the west.",
+  "answer2-0": "True",
+  "answer2-1": "False",
+  "correct2": "2-1",
+  "correctAnswers": ["4", "He's the greatest in all existence", "False"]
+}

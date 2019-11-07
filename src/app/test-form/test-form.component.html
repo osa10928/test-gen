@@ -35,7 +35,7 @@
   <div class="d-flex flex-column">
     <mat-form-field appearance="standard" class="w-50">
       <mat-label>Name of Test</mat-label>
-      <input matInput type="text" formControlName="name" autofilled="false"
+      <input id="test-name" matInput type="text" formControlName="name" autofilled="false"
              autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('name').hasError('required')">
         Required
@@ -43,13 +43,13 @@
     </mat-form-field>
     <mat-form-field appearance="standard" class="w-25">
       <mat-label>Passing Grade</mat-label>
-      <input matInput type="number" formControlName="passingGrade" max="100" min="0" autofilled="false"
+      <input id="passing-grade" matInput type="number" formControlName="passingGrade" max="100" min="0" autofilled="false"
              autocomplete="off" required/>
       <mat-error *ngIf="testForm.get('passingGrade').hasError('required')">
         Required
       </mat-error>
     </mat-form-field>
-    <mat-checkbox class="published" formControlName="published">Published</mat-checkbox>
+    <mat-checkbox id="checkbox-published" class="published" formControlName="published">Published</mat-checkbox>
   </div>
 
   <section *ngIf="testForm.get('multipleChoiceQuestions').value.length">
@@ -71,7 +71,9 @@
                         cdkAutosizeMaxRows="5"
                         autofilled="false"
                         autocomplete="off"
-                        required></textarea>
+                        required
+                        id="question-{{i + 1}}"
+              ></textarea>
               <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].hasError('required')">
                 Required
               </mat-error>
@@ -100,7 +102,9 @@
                               cdkAutosizeMaxRows="5"
                               autofilled="false"
                               autocomplete="off"
-                              required></textarea>
+                              required
+                              id="answer-{{i}}-{{j}}"
+                    ></textarea>
                     <mat-error *ngIf="testForm.get('multipleChoiceQuestions').controls[i].get('answers').controls[j].get('answer').hasError('required')">
                       Required
                     </mat-error>
